@@ -216,6 +216,7 @@ class CameraViewController: UIViewController, AVCaptureVideoDataOutputSampleBuff
     private var requests = [VNRequest]()
     private var detectionOverlay: CALayer! = nil // Layer for drawing detection results
     private var objectCounts: [String: Int] = [:] // Dictionary to store object counts
+    private var detectedObjects: Set<String> = [] // Set to store unique object instances
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -273,8 +274,8 @@ class CameraViewController: UIViewController, AVCaptureVideoDataOutputSampleBuff
     
     private func handleResults(_ results: [Any]?) {
         DispatchQueue.main.async {
-            self.detectionOverlay.sublayers?.removeAll()
             self.objectCounts.removeAll()
+            self.detectedObjects.removeAll()
             
             guard let results = results as? [VNRecognizedObjectObservation], !results.isEmpty else {
                 print("❌ No objects detected.")
@@ -283,7 +284,16 @@ class CameraViewController: UIViewController, AVCaptureVideoDataOutputSampleBuff
             
             for result in results {
                 let bestLabel = result.labels.first?.identifier ?? "Unknown"
-                self.objectCounts[bestLabel, default: 0] += 1
+                let confidence = result.labels.first?.confidence ?? 0.0
+                
+                // Generate a unique key for the detected object based on its position
+                let objectKey = "\(bestLabel)_\(Int(result.boundingBox.minX * 1000))_\(Int(result.boundingBox.minY * 1000))"
+                
+                // Avoid double-counting the same object in different frames
+                if !self.detectedObjects.contains(objectKey) {
+                    self.detectedObjects.insert(objectKey)
+                    self.objectCounts[bestLabel, default: 0] += 1
+                }
             }
             
             self.displayObjectCounts()
