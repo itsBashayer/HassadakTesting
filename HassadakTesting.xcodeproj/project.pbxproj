@@ -10,9 +10,22 @@
 		865508CC2D70531C00376419 /* HassadakTesting.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = HassadakTesting.app; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
+/* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
+		910716FA2D76F9BA002A80CD /* Exceptions for "HassadakTesting" folder in "HassadakTesting" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Info.plist,
+			);
+			target = 865508CB2D70531C00376419 /* HassadakTesting */;
+		};
+/* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
+
 /* Begin PBXFileSystemSynchronizedRootGroup section */
 		865508CE2D70531C00376419 /* HassadakTesting */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				910716FA2D76F9BA002A80CD /* Exceptions for "HassadakTesting" folder in "HassadakTesting" target */,
+			);
 			path = HassadakTesting;
 			sourceTree = "<group>";
 		};
@@ -252,9 +265,10 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"HassadakTesting/Preview Content\"";
-				DEVELOPMENT_TEAM = FVPWS9CD5F;
+				DEVELOPMENT_TEAM = 6S868LA2TD;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = HassadakTesting/Info.plist;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -281,9 +295,10 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"HassadakTesting/Preview Content\"";
-				DEVELOPMENT_TEAM = FVPWS9CD5F;
+				DEVELOPMENT_TEAM = 6S868LA2TD;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = HassadakTesting/Info.plist;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
