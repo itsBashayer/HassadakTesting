@@ -2,7 +2,6 @@ import SwiftUI
 import AVFoundation
 import Vision
 
-
 class CameraViewController: UIViewController {
     private let session = AVCaptureSession()
     private let photoOutput = AVCapturePhotoOutput()
@@ -10,13 +9,13 @@ class CameraViewController: UIViewController {
     private var detectionOverlay: CALayer! = nil
     private var objectCounts: [String: Int] = [:]
     
-    private var isPhotoCaptured = false // للإشارة إلى أنه تم التقاط صورة
-    private var retryCaptureButton: UIButton! // زر إعادة التقاط الصورة
+    private var isPhotoCaptured = false
+    private var retryCaptureButton: UIButton!
 
     override func viewDidLoad() {
         super.viewDidLoad()
         setupCamera()
-        setupOverlayUI() // تأكد من أنها هنا
+        setupOverlayUI()
     }
 
     private func setupCamera() {
@@ -54,13 +53,12 @@ class CameraViewController: UIViewController {
     }
 
     func capturePhoto() {
-        guard !isPhotoCaptured else { return } // لا نسمح بالتقاط صورة ثانية إذا كانت الصورة قد تم التقاطها مسبقًا
+        guard !isPhotoCaptured else { return }
         let settings = AVCapturePhotoSettings()
         photoOutput.capturePhoto(with: settings, delegate: self)
-        isPhotoCaptured = true // تم التقاط الصورة
-        session.stopRunning() // إيقاف الكاميرا بعد التقاط الصورة
+        isPhotoCaptured = true
+        session.stopRunning()
 
-        // إظهار زر إعادة التقاط الصورة
         showRetryButton()
     }
 
@@ -75,18 +73,17 @@ class CameraViewController: UIViewController {
 
     @objc private func retryCapture() {
         isPhotoCaptured = false
-        objectCounts.removeAll() // مسح العد
+        objectCounts.removeAll()
 
-        // إزالة العد السابق
         detectionOverlay.sublayers?.removeAll()
 
-        session.startRunning() // إعادة تشغيل الكاميرا
-        retryCaptureButton.removeFromSuperview() // إزالة زر إعادة التقاط الصورة
+        session.startRunning()
+        retryCaptureButton.removeFromSuperview()
     }
 
     private func updateCapturedImage(_ image: UIImage) {
-        self.detectionOverlay.sublayers?.removeAll() // إزالة العناصر السابقة
-        processImage(image) // بدء المعالجة
+        self.detectionOverlay.sublayers?.removeAll()
+        processImage(image)
     }
 
     private func processImage(_ image: UIImage) {
@@ -107,26 +104,24 @@ class CameraViewController: UIViewController {
 
     private func handleResults(_ results: [Any]?) {
         DispatchQueue.main.async {
-            self.detectionOverlay.sublayers?.removeAll() // إزالة التراكب الحالي
-            self.objectCounts.removeAll() // مسح العد
+            self.detectionOverlay.sublayers?.removeAll()
+            self.objectCounts.removeAll()
 
             guard let results = results as? [VNRecognizedObjectObservation], !results.isEmpty else {
                 print("❌ No objects detected.")
                 return
             }
 
-            // عد الكائنات وتخزين الأسماء
             for result in results {
                 let bestLabel = result.labels.first?.identifier ?? "Unknown"
                 self.objectCounts[bestLabel, default: 0] += 1
             }
 
-            self.displayObjectCounts() // عرض العد بعد المعالجة
+            self.displayObjectCounts()
         }
     }
 
     private func displayObjectCounts() {
-        // عرض العد وأسماء الأجسام
         let countText = objectCounts.map { "\($0.key): \($0.value)" }.joined(separator: "\n")
 
         let countLayer = CATextLayer()
@@ -138,7 +133,7 @@ class CameraViewController: UIViewController {
         countLayer.frame = CGRect(x: 10, y: 50, width: 300, height: 100)
         countLayer.cornerRadius = 8
         countLayer.contentsScale = UIScreen.main.scale
-        detectionOverlay.addSublayer(countLayer) // إضافة الطبقة إلى الواجهة
+        detectionOverlay.addSublayer(countLayer)
     }
 }
 
@@ -147,6 +142,6 @@ extension CameraViewController: AVCapturePhotoCaptureDelegate {
         guard let imageData = photo.fileDataRepresentation(),
               let image = UIImage(data: imageData) else { return }
 
-        updateCapturedImage(image) // تحديث الصورة الملتقطة
+        updateCapturedImage(image)
     }
 }
