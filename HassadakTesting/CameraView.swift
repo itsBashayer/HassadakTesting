@@ -2,16 +2,39 @@
 //  CameraView.swift
 //  HassadakTesting
 //
-//  Created by Joury on 04/09/1446 AH.
+//  Created by Joury on 05/09/1446 AH.
 //
 import SwiftUI
+import AVFoundation
 
-// CameraView.swift
-struct CameraView: UIViewControllerRepresentable {
-    func makeUIViewController(context: Context) -> CameraViewController {
-        let controller = CameraViewController()
-        return controller
+struct CameraView: View {
+    var session: AVCaptureSession
+
+    var body: some View {
+        CameraPreview(session: session)
+            .ignoresSafeArea()
     }
-    
-    func updateUIViewController(_ uiViewController: CameraViewController, context: Context) {}
+}
+
+struct CameraPreview: UIViewRepresentable {
+    let session: AVCaptureSession
+
+    func makeUIView(context: Context) -> CameraPreviewView {
+        let view = CameraPreviewView()
+        view.videoPreviewLayer.session = session
+        view.videoPreviewLayer.videoGravity = .resizeAspectFill
+        return view
+    }
+
+    func updateUIView(_ uiView: CameraPreviewView, context: Context) {}
+
+    class CameraPreviewView: UIView {
+        override class var layerClass: AnyClass {
+            AVCaptureVideoPreviewLayer.self
+        }
+
+        var videoPreviewLayer: AVCaptureVideoPreviewLayer {
+            return layer as! AVCaptureVideoPreviewLayer
+        }
+    }
 }
