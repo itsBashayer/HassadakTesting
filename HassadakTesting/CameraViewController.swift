@@ -102,6 +102,26 @@ class CameraViewController: UIViewController {
         try? handler.perform([request])
     }
 
+//    private func handleResults(_ results: [Any]?) {
+//        DispatchQueue.main.async {
+//            self.detectionOverlay.sublayers?.removeAll()
+//            self.objectCounts.removeAll()
+//
+//            guard let results = results as? [VNRecognizedObjectObservation], !results.isEmpty else {
+//                print("❌ No objects detected.")
+//                return
+//            }
+//
+//            for result in results {
+//                let bestLabel = result.labels.first?.identifier ?? "Unknown"
+//                self.objectCounts[bestLabel, default: 0] += 1
+//            }
+//
+//            self.displayObjectCounts()
+//        }
+//    }
+    
+    
     private func handleResults(_ results: [Any]?) {
         DispatchQueue.main.async {
             self.detectionOverlay.sublayers?.removeAll()
@@ -112,7 +132,13 @@ class CameraViewController: UIViewController {
                 return
             }
 
-            for result in results {
+            // Confidence threshold (adjust as needed)
+            let confidenceThreshold: VNConfidence = 0.8
+
+            // Filter detections based on confidence
+            let filteredResults = results.filter { $0.confidence >= confidenceThreshold }
+
+            for result in filteredResults {
                 let bestLabel = result.labels.first?.identifier ?? "Unknown"
                 self.objectCounts[bestLabel, default: 0] += 1
             }
@@ -120,6 +146,7 @@ class CameraViewController: UIViewController {
             self.displayObjectCounts()
         }
     }
+
 
     private func displayObjectCounts() {
         let countText = objectCounts.map { "\($0.key): \($0.value)" }.joined(separator: "\n")
