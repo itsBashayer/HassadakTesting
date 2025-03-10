@@ -4,12 +4,15 @@
 //
 //  Created by BASHAER AZIZ on 03/09/1446 AH.
 //
+
 import SwiftUI
+import AVFoundation
 
 struct CamButton: View {
     @State private var showInstructions = true
     @State private var selectedNavItem: String? = nil
     var capturePhotoAction: () -> Void
+    let soundPlayer = SoundPlayer()
 
     var body: some View {
         ZStack {
@@ -22,7 +25,10 @@ struct CamButton: View {
                 
                 Spacer()
                 
-                BottomNavBar(showInstructions: $showInstructions, selectedNavItem: $selectedNavItem, capturePhotoAction: capturePhotoAction) 
+                BottomNavBar(showInstructions: $showInstructions, selectedNavItem: $selectedNavItem, capturePhotoAction: {
+                    soundPlayer.playSound()
+                    capturePhotoAction()
+                })
             }
         }
     }
@@ -82,7 +88,9 @@ struct BottomNavBar: View {
     var body: some View {
         HStack {
             NavBarItem(imageName: "history", text: "History", selectedNavItem: $selectedNavItem)
-            NavBarItem(imageName: "counter", text: "Counter", selectedNavItem: $selectedNavItem, action: capturePhotoAction)
+            NavBarItem(imageName: "counter", text: "Counter", selectedNavItem: $selectedNavItem, action: {
+                capturePhotoAction()  
+            })
             NavBarItem(imageName: "Instructions", text: "Instructions", selectedNavItem: $selectedNavItem) {
                 showInstructions = true
             }
@@ -130,5 +138,23 @@ struct NavBarItem: View {
                 .foregroundColor(isSelected ? Color("Green") : .gray)
         }
         .padding(.horizontal, 22)
+    }
+}
+
+
+class SoundPlayer {
+    var player: AVAudioPlayer?
+
+    func playSound() {
+        if let soundURL = Bundle.main.url(forResource: "CounterSound", withExtension: "mp3") {
+            do {
+                player = try AVAudioPlayer(contentsOf: soundURL)
+                player?.play()
+            } catch {
+                print("Error playing sound: \(error.localizedDescription)")
+            }
+        } else {
+            print("Sound file not found!")
+        }
     }
 }
