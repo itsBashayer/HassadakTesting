@@ -1,6 +1,7 @@
 import SwiftUI
 
 
+
 // MARK: - 1) HistoryView (and everything in it)
 
 struct PersistentGreenBorderStyle: ButtonStyle {
@@ -37,7 +38,7 @@ struct HistoryView: View {
                     Text("History")
                         .font(.largeTitle)
                         .fontWeight(.bold)
-                        .foregroundColor(Color("green"))
+                        .foregroundColor(Color("Green"))
 
                     Text(Formatter.date.string(from: currentDate))
                         .font(.subheadline)
@@ -65,7 +66,7 @@ struct HistoryView: View {
 
                                 Text("60 pieces")
                                     .font(.headline)
-                                    .foregroundColor(Color("green"))
+                                    .foregroundColor(Color("Green"))
                                     .lineLimit(1)
                             }
                             .padding(.vertical, 0)
