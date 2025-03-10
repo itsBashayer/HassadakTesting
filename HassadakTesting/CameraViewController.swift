@@ -44,7 +44,8 @@ class CameraViewController: UIViewController {
     }
 
     private func setupOverlayUI() {
-        let hostingController = UIHostingController(rootView: CamButton(onCapture: capturePhoto))
+        let hostingController = UIHostingController(rootView: CamButton())
+
         addChild(hostingController)
         hostingController.view.frame = view.bounds
         hostingController.view.backgroundColor = .clear

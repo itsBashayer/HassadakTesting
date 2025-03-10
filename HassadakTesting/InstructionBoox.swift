@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct InstructionBox: View {
+struct InstructionBoox: View {
     @Binding var showInstructions: Bool
 
     var body: some View {
