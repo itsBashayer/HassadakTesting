@@ -4,17 +4,15 @@
 //
 //  Created by BASHAER AZIZ on 03/09/1446 AH.
 //
-
 import SwiftUI
 
 struct CamButton: View {
     @State private var showInstructions = true
     @State private var selectedNavItem: String? = nil
+    var capturePhotoAction: () -> Void
 
     var body: some View {
         ZStack {
-           // Color.black.ignoresSafeArea()
-            
             VStack {
                 Spacer()
                 
@@ -24,7 +22,7 @@ struct CamButton: View {
                 
                 Spacer()
                 
-                BottomNavBar(showInstructions: $showInstructions, selectedNavItem: $selectedNavItem)
+                BottomNavBar(showInstructions: $showInstructions, selectedNavItem: $selectedNavItem, capturePhotoAction: capturePhotoAction) 
             }
         }
     }
@@ -79,16 +77,16 @@ struct InstructionRow: View {
 struct BottomNavBar: View {
     @Binding var showInstructions: Bool
     @Binding var selectedNavItem: String?
+    var capturePhotoAction: () -> Void
     
     var body: some View {
         HStack {
             NavBarItem(imageName: "history", text: "History", selectedNavItem: $selectedNavItem)
-            NavBarItem(imageName: "counter", text: "Counter", selectedNavItem: $selectedNavItem)
+            NavBarItem(imageName: "counter", text: "Counter", selectedNavItem: $selectedNavItem, action: capturePhotoAction)
             NavBarItem(imageName: "Instructions", text: "Instructions", selectedNavItem: $selectedNavItem) {
                 showInstructions = true
             }
         }
-//        .padding()
     }
 }
 
@@ -132,11 +130,5 @@ struct NavBarItem: View {
                 .foregroundColor(isSelected ? Color("Green") : .gray)
         }
         .padding(.horizontal, 22)
-    }
-}
-
-struct CamButton_Previews: PreviewProvider {
-    static var previews: some View {
-        CamButton()
     }
 }

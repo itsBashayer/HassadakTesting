@@ -25,7 +25,7 @@ struct HassadakTestingApp: App {
 
     var body: some Scene {
         WindowGroup {
-            HistoryView()
+            ContentView()
         }
       //  .modelContainer(sharedModelContainer)
     }

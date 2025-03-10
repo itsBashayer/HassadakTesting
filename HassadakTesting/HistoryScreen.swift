@@ -111,7 +111,7 @@ struct HistoryView: View {
                         .foregroundColor(.white)
                         .frame(height: 56)
                         .frame(maxWidth: geometry.size.width * 0.8)
-                        .background(Color("green"))
+                        .background(Color("Green"))
                         .cornerRadius(12)
                     }
                     .padding(geometry.size.width * 0.05)
