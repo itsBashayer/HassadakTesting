@@ -504,6 +504,7 @@
 //        HistoryView(selectedItemName: "", selectedItemQTY: 0, captureDate: "")
 //    }
 //}
+
 import SwiftUI
 
 struct HistoryView: View {

@@ -373,6 +373,7 @@ class CameraViewController: UIViewController {
     private var detectionOverlay: CALayer! = nil
     private var objectCounts: [String: Int] = [:]
     var userName: String = "" // ✅ Added userName
+    
     private var isPhotoCaptured = false
     private var retakeButton: UIButton!
     private var saveButton: UIButton!

@@ -10,7 +10,7 @@ import SwiftData
 
 @main
 struct HassadakTestingApp: App {
-
+   
 
     var body: some Scene {
         WindowGroup {
