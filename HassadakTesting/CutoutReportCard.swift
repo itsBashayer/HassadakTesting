@@ -11,6 +11,7 @@ struct CutoutReportCard: View {
     var itemName: String
     var itemQTY: Int
     var date: String
+    var userName: String // ✅ Added userName
     var showShape: Bool = true
     var geometry: GeometryProxy
 
@@ -33,8 +34,18 @@ struct CutoutReportCard: View {
                     .font(.largeTitle)
                     .fontWeight(.bold)
                     .foregroundColor(.primary)
+                
+                
 
                 VStack(alignment: .leading, spacing: 8) {
+                    
+                    HStack {
+                    Text("From:") // ✅ Display userName
+                    .fontWeight(.semibold)
+                    Text(userName)
+                                       }
+                    
+                    
                     HStack {
                         Text("Date:")
                             .fontWeight(.semibold)

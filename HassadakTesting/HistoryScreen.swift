@@ -351,6 +351,159 @@
 //        HistoryView()
 //    }
 //}
+//import SwiftUI
+//
+//struct HistoryView: View {
+//    @State private var showPopup = false
+//    @State private var pdfURL: URL?
+//    var selectedItemName: String
+//    var selectedItemQTY: Int
+//    var captureDate: String
+//
+//    var body: some View {
+//        GeometryReader { geometry in
+//            ZStack {
+//                VStack(alignment: .leading, spacing: 16) {
+//                    Text("History")
+//                        .font(.largeTitle)
+//                        .fontWeight(.bold)
+//                        .foregroundColor(Color("Green"))
+//
+//                    // ✅ Displays the capture date
+//                    Text(captureDate)
+//                        .font(.subheadline)
+//                        .foregroundColor(.gray)
+//
+//                    VStack(alignment: .leading, spacing: 16) {
+//                        Button {
+//                            showPopup = true
+//                        } label: {
+//                            HStack(spacing: 16) {
+//                                Image("bannerimage")
+//                                    .resizable()
+//                                    .aspectRatio(contentMode: .fit)
+//                                    .frame(width: min(geometry.size.width * 0.15, 56), height: min(geometry.size.width * 0.15, 56))
+//
+//                                VStack(alignment: .leading) {
+//                                    Text(selectedItemName.isEmpty ? "" : selectedItemName)
+//                                        .font(.system(size: 18, weight: .bold))
+//                                        .foregroundColor(.primary)
+//                                        .lineLimit(1)
+//
+////                                    Text("Captured on: \(captureDate)")
+////                                        .font(.subheadline)
+////                                        .foregroundColor(.gray)
+//                                }
+//
+//                                Spacer()
+//
+//                                Text("\(selectedItemQTY) pieces")
+//                                    .font(.headline)
+//                                    .foregroundColor(Color("Green"))
+//                                    .lineLimit(1)
+//                            }
+//                            .padding(.vertical, 0)
+//                            .padding(.horizontal, 0)
+//                            .frame(maxWidth: .infinity)
+//                        }
+//
+//                        Spacer()
+//                    }
+//
+//                    Spacer()
+//                }
+//                .padding(geometry.size.width * 0.05)
+//
+//                if showPopup {
+//                    Color.black.opacity(0.4)
+//                        .edgesIgnoringSafeArea(.all)
+//                        .onTapGesture {
+//                            showPopup = false
+//                        }
+//
+//                    VStack(spacing: 16) {
+//                        // ✅ Passing Data to CutoutReportCard
+//                        CutoutReportCard(
+//                            itemName: selectedItemName,
+//                            itemQTY: selectedItemQTY,
+//                            date: captureDate,
+//                            showShape: true,
+//                            geometry: geometry
+//                        )
+//
+//                        if let pdfURL = pdfURL {
+//                            ShareLink(item: pdfURL, preview: SharePreview("Report", image: Image(systemName: "doc"))) {
+//                                HStack {
+//                                    Image(systemName: "square.and.arrow.up")
+//                                    Text("Share Report")
+//                                }
+//                                .font(.headline)
+//                                .foregroundColor(.white)
+//                                .frame(height: 56)
+//                                .frame(maxWidth: geometry.size.width * 0.8)
+//                                .background(Color("Green"))
+//                                .cornerRadius(12)
+//                            }
+//                        } else {
+//                            Button("Generate Report") {
+//                                shareReportAsPDF(geometry: geometry)
+//                            }
+//                            .font(.headline)
+//                            .foregroundColor(.white)
+//                            .frame(height: 56)
+//                            .frame(maxWidth: geometry.size.width * 0.8)
+//                            .background(Color("Green"))
+//                            .cornerRadius(12)
+//                        }
+//                    }
+//                    .padding(geometry.size.width * 0.05)
+//                }
+//            }
+//        }
+//    }
+//
+//    // ✅ Generates and saves the PDF with passed data
+//    private func shareReportAsPDF(geometry: GeometryProxy) {
+//        let cardView = CutoutReportCard(
+//            itemName: selectedItemName,
+//            itemQTY: selectedItemQTY,
+//            date: captureDate,
+//            showShape: false,
+//            geometry: geometry
+//        )
+//
+//        let pdfData = renderViewAsPDF(cardView, size: CGSize(width: geometry.size.width * 0.8, height: geometry.size.height * 0.6))
+//        let tempURL = FileManager.default.temporaryDirectory.appendingPathComponent("Report.pdf")
+//
+//        do {
+//            try pdfData.write(to: tempURL)
+//            pdfURL = tempURL
+//        } catch {
+//            print("Error writing PDF data: \(error)")
+//        }
+//    }
+//
+//    private func renderViewAsPDF<Content: View>(_ view: Content, size: CGSize) -> Data {
+//        let controller = UIHostingController(rootView: view)
+//        controller.view.frame = CGRect(origin: .zero, size: size)
+//        controller.view.layoutIfNeeded()
+//        controller.view.backgroundColor = .white
+//        controller.overrideUserInterfaceStyle = .light
+//
+//        let pdfRenderer = UIGraphicsPDFRenderer(bounds: controller.view.bounds)
+//        return pdfRenderer.pdfData { context in
+//            context.beginPage()
+//            controller.view.drawHierarchy(in: controller.view.bounds, afterScreenUpdates: true)
+//        }
+//    }
+//}
+//
+//// ✅ Keeps preview functionality without passing arguments
+//struct HistoryView_Previews: PreviewProvider {
+//    static var previews: some View {
+//        HistoryView(selectedItemName: "", selectedItemQTY: 0, captureDate: "")
+//    }
+//}
 import SwiftUI
 
 struct HistoryView: View {
@@ -359,6 +512,7 @@ struct HistoryView: View {
     var selectedItemName: String
     var selectedItemQTY: Int
     var captureDate: String
+    var userName: String // ✅ Add this to accept userName
 
     var body: some View {
         GeometryReader { geometry in
@@ -385,14 +539,10 @@ struct HistoryView: View {
                                     .frame(width: min(geometry.size.width * 0.15, 56), height: min(geometry.size.width * 0.15, 56))
 
                                 VStack(alignment: .leading) {
-                                    Text("Today's \(selectedItemName.isEmpty ? "Unknown Item" : selectedItemName)")
+                                    Text(selectedItemName.isEmpty ? "" : selectedItemName)
                                         .font(.system(size: 18, weight: .bold))
                                         .foregroundColor(.primary)
                                         .lineLimit(1)
-
-                                    Text("Captured on: \(captureDate)")
-                                        .font(.subheadline)
-                                        .foregroundColor(.gray)
                                 }
 
                                 Spacer()
@@ -413,6 +563,9 @@ struct HistoryView: View {
                     Spacer()
                 }
                 .padding(geometry.size.width * 0.05)
+                .onAppear {
+                    generatePDF(geometry: geometry) // ✅ Automatically generate PDF on load
+                }
 
                 if showPopup {
                     Color.black.opacity(0.4)
@@ -422,14 +575,15 @@ struct HistoryView: View {
                         }
 
                     VStack(spacing: 16) {
-                        // ✅ Passing Data to CutoutReportCard
+                        // ✅ Pass `userName` to CutoutReportCard
                         CutoutReportCard(
-                            itemName: selectedItemName,
-                            itemQTY: selectedItemQTY,
-                            date: captureDate,
-                            showShape: true,
-                            geometry: geometry
-                        )
+                        itemName: selectedItemName,
+                        itemQTY: selectedItemQTY,
+                        date: captureDate,
+                        userName: userName, // ✅ Added
+                        showShape: true,
+                        geometry: geometry)
+
 
                         if let pdfURL = pdfURL {
                             ShareLink(item: pdfURL, preview: SharePreview("Report", image: Image(systemName: "doc"))) {
@@ -445,15 +599,9 @@ struct HistoryView: View {
                                 .cornerRadius(12)
                             }
                         } else {
-                            Button("Generate Report") {
-                                shareReportAsPDF(geometry: geometry)
-                            }
-                            .font(.headline)
-                            .foregroundColor(.white)
-                            .frame(height: 56)
-                            .frame(maxWidth: geometry.size.width * 0.8)
-                            .background(Color("Green"))
-                            .cornerRadius(12)
+                            Text("Generating Report...")
+                                .font(.headline)
+                                .foregroundColor(.gray)
                         }
                     }
                     .padding(geometry.size.width * 0.05)
@@ -462,12 +610,13 @@ struct HistoryView: View {
         }
     }
 
-    // ✅ Generates and saves the PDF with passed data
-    private func shareReportAsPDF(geometry: GeometryProxy) {
+    // ✅ Generates and saves the PDF automatically
+    private func generatePDF(geometry: GeometryProxy) {
         let cardView = CutoutReportCard(
             itemName: selectedItemName,
             itemQTY: selectedItemQTY,
             date: captureDate,
+            userName: userName, // ✅ Added userName
             showShape: false,
             geometry: geometry
         )
@@ -477,7 +626,9 @@ struct HistoryView: View {
 
         do {
             try pdfData.write(to: tempURL)
-            pdfURL = tempURL
+            DispatchQueue.main.async {
+                self.pdfURL = tempURL // ✅ Updates the PDF URL once generated
+            }
         } catch {
             print("Error writing PDF data: \(error)")
         }
@@ -501,6 +652,7 @@ struct HistoryView: View {
 // ✅ Keeps preview functionality without passing arguments
 struct HistoryView_Previews: PreviewProvider {
     static var previews: some View {
-        HistoryView(selectedItemName: "", selectedItemQTY: 0, captureDate: "")
+        HistoryView(selectedItemName: "", selectedItemQTY: 0, captureDate: "", userName: "Preview User") // ✅ Added userName
     }
 }
+

@@ -372,7 +372,7 @@ class CameraViewController: UIViewController {
     private var previewLayer: AVCaptureVideoPreviewLayer!
     private var detectionOverlay: CALayer! = nil
     private var objectCounts: [String: Int] = [:]
-    
+    var userName: String = "" // ✅ Added userName
     private var isPhotoCaptured = false
     private var retakeButton: UIButton!
     private var saveButton: UIButton!
@@ -408,13 +408,24 @@ class CameraViewController: UIViewController {
         session.startRunning()
     }
     
+//    private func setupOverlayUI() {
+//        let hostingController = UIHostingController(rootView: CamButton(capturePhotoAction: capturePhoto))
+//
+//        hostingController.view.frame = view.bounds
+//        hostingController.view.backgroundColor = .clear
+//        view.addSubview(hostingController.view)
+//        hostingController.didMove(toParent: self)
+//    }
     private func setupOverlayUI() {
-        let hostingController = UIHostingController(rootView: CamButton(capturePhotoAction: capturePhoto))
-        hostingController.view.frame = view.bounds
-        hostingController.view.backgroundColor = .clear
-        view.addSubview(hostingController.view)
-        hostingController.didMove(toParent: self)
-    }
+            let hostingController = UIHostingController(rootView: CamButton(
+                userName: userName, // ✅ Pass userName to CamButton
+                capturePhotoAction: capturePhoto
+            ))
+            hostingController.view.frame = view.bounds
+            hostingController.view.backgroundColor = .clear
+            view.addSubview(hostingController.view)
+            hostingController.didMove(toParent: self)
+        }
     
     func capturePhoto() {
         guard !isPhotoCaptured else { return }
@@ -460,29 +471,55 @@ class CameraViewController: UIViewController {
         saveButton.removeFromSuperview()
     }
     
+//    @objc private func saveImage() {
+//        guard let firstDetectedObject = objectCounts.first else {
+//            print("❌ No objects detected to save.")
+//            return
+//        }
+//
+//        let selectedItemName = firstDetectedObject.key
+//        let totalItem = firstDetectedObject.value
+//        let captureDate = DateFormatter.localizedString(from: Date(), dateStyle: .medium, timeStyle: .short)
+//
+//        print("📸 Saving: \(selectedItemName) - Count: \(totalItem) - Date: \(captureDate)")
+//
+//        // ✅ Navigate to HistoryView while passing the data
+//        DispatchQueue.main.async {
+//            let historyView = UIHostingController(rootView: HistoryView(
+//                selectedItemName: selectedItemName,
+//                selectedItemQTY: totalItem,
+//                captureDate: captureDate,
+//                userName: userName // ✅ Pass userName
+//            ))
+//            self.present(historyView, animated: true, completion: nil)
+//        }
+//    }
+
+    
     @objc private func saveImage() {
-        guard let firstDetectedObject = objectCounts.first else {
-            print("❌ No objects detected to save.")
-            return
+            guard let firstDetectedObject = objectCounts.first else {
+                print("❌ No objects detected to save.")
+                return
+            }
+
+            let selectedItemName = firstDetectedObject.key
+            let totalItem = firstDetectedObject.value
+            let captureDate = DateFormatter.localizedString(from: Date(), dateStyle: .medium, timeStyle: .short)
+
+            print("📸 Saving: \(selectedItemName) - Count: \(totalItem) - Date: \(captureDate) - User: \(userName)")
+
+            // ✅ Navigate to HistoryView while passing the data
+            DispatchQueue.main.async {
+                let historyView = UIHostingController(rootView: HistoryView(
+                    selectedItemName: selectedItemName,
+                    selectedItemQTY: totalItem,
+                    captureDate: captureDate,
+                    userName: self.userName // ✅ Pass userName correctly
+                ))
+                self.present(historyView, animated: true, completion: nil)
+            }
         }
-
-        let selectedItemName = firstDetectedObject.key
-        let totalItem = firstDetectedObject.value
-        let captureDate = DateFormatter.localizedString(from: Date(), dateStyle: .medium, timeStyle: .short)
-
-        print("📸 Saving: \(selectedItemName) - Count: \(totalItem) - Date: \(captureDate)")
-
-        // ✅ Navigate to HistoryView while passing the data
-        DispatchQueue.main.async {
-            let historyView = UIHostingController(rootView: HistoryView(
-                selectedItemName: selectedItemName,
-                selectedItemQTY: totalItem,
-                captureDate: captureDate
-            ))
-            self.present(historyView, animated: true, completion: nil)
-        }
-    }
-
+    
     private func updateCapturedImage(_ image: UIImage) {
         self.detectionOverlay.sublayers?.removeAll()
         processImage(image)

@@ -30,7 +30,7 @@ struct OnboardingView: View {
                 .ignoresSafeArea()
             }
             .navigationDestination(isPresented: $isActive) {
-                test()
+                ContentView()
                     .navigationBarBackButtonHidden(true)
             }
         }
@@ -42,7 +42,7 @@ struct OnboardingScreen: View {
     var description: String
     @Binding var selection: Int // Track onboarding page
     @Binding var isActive: Bool // Navigation control
-    @State private var name: String = "" // Store user name input
+    @State private var userName: String = "" // Store user name input
     
     var body: some View {
         ZStack {
@@ -62,7 +62,7 @@ struct OnboardingScreen: View {
                     .padding()
                 
                 if imageName == "onboarding3" {
-                    TextField("Enter your name", text: $name)
+                    TextField("Enter your name", text: $userName)
                         .font(.system(size: 16))
                         .padding(10)
                         .background(Color.white.opacity(0.8))
@@ -78,22 +78,48 @@ struct OnboardingScreen: View {
                         .disableAutocorrection(false)
                         .padding(.horizontal)
                     
+//                    Button(action: {
+//                        if !userName.isEmpty {
+//                            UserDefaults.standard.set(true, forKey: "hasSeenOnboarding")
+//                            isActive = true
+//                        }
+//                    }) {
+//                        Text("Start")
+//                            .fontWeight(.bold)
+//                            .foregroundColor(Color("green1"))
+//                            .font(.body)
+//                            .frame(width: 260, height: 46)
+//                            .background(userName.isEmpty ? Color.white : Color.white)
+//                            .cornerRadius(12)
+//                            .padding(60)
+//                    }
+//                    .disabled(userName.isEmpty) // Disable the button if name is empty
                     Button(action: {
-                        if !name.isEmpty {
-                            UserDefaults.standard.set(true, forKey: "hasSeenOnboarding")
+                        if !userName.isEmpty {
                             isActive = true
                         }
                     }) {
-                        Text("Start")
-                            .fontWeight(.bold)
-                            .foregroundColor(Color("green1"))
-                            .font(.body)
-                            .frame(width: 260, height: 46)
-                            .background(name.isEmpty ? Color.white : Color.white)
-                            .cornerRadius(12)
-                            .padding(60)
+                        NavigationLink(
+                            destination: HistoryView(
+                                selectedItemName: "",
+                                selectedItemQTY: 0,
+                                captureDate: "",
+                                userName: userName // ✅ Pass userName to HistoryView
+                            ),
+                            isActive: $isActive
+                        ) {
+                            Text("Start")
+                                .fontWeight(.bold)
+                                .foregroundColor(Color("green1"))
+                                .font(.body)
+                                .frame(width: 260, height: 46)
+                                .background(userName.isEmpty ? Color.white : Color.white)
+                                .cornerRadius(12)
+                                .padding(60)
+                        }
                     }
-                    .disabled(name.isEmpty) // Disable the button if name is empty
+                    .disabled(userName.isEmpty) // Disable button if name is empty
+
                 } else {
                     Spacer()
                 }
