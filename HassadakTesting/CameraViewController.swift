@@ -497,30 +497,53 @@ class CameraViewController: UIViewController {
 //    }
 
     
+//    @objc private func saveImage() {
+//            guard let firstDetectedObject = objectCounts.first else {
+//                print("❌ No objects detected to save.")
+//                return
+//            }
+//
+//            let selectedItemName = firstDetectedObject.key
+//            let totalItem = firstDetectedObject.value
+//            let captureDate = DateFormatter.localizedString(from: Date(), dateStyle: .medium, timeStyle: .short)
+//
+//            print("📸 Saving: \(selectedItemName) - Count: \(totalItem) - Date: \(captureDate) - User: \(userName)")
+//
+//            // ✅ Navigate to HistoryView while passing the data
+//            DispatchQueue.main.async {
+//                let historyView = UIHostingController(rootView: HistoryView(
+//                    selectedItemName: selectedItemName,
+//                    selectedItemQTY: totalItem,
+//                    captureDate: captureDate,
+//                    userName: self.userName // ✅ Pass userName correctly
+//                ))
+//                self.present(historyView, animated: true, completion: nil)
+//            }
+//        }
+    
     @objc private func saveImage() {
             guard let firstDetectedObject = objectCounts.first else {
                 print("❌ No objects detected to save.")
                 return
             }
 
-            let selectedItemName = firstDetectedObject.key
-            let totalItem = firstDetectedObject.value
-            let captureDate = DateFormatter.localizedString(from: Date(), dateStyle: .medium, timeStyle: .short)
+            let itemName = firstDetectedObject.key // ✅ Renamed from selectedItemName
+            let totalProducts = firstDetectedObject.value // ✅ Renamed from selectedItemQTY
+            let date = DateFormatter.localizedString(from: Date(), dateStyle: .medium, timeStyle: .short) // ✅ Renamed from captureDate
 
-            print("📸 Saving: \(selectedItemName) - Count: \(totalItem) - Date: \(captureDate) - User: \(userName)")
+            print("📸 Saving: \(itemName) - Count: \(totalProducts) - Date: \(date) - User: \(userName)")
 
             // ✅ Navigate to HistoryView while passing the data
             DispatchQueue.main.async {
                 let historyView = UIHostingController(rootView: HistoryView(
-                    selectedItemName: selectedItemName,
-                    selectedItemQTY: totalItem,
-                    captureDate: captureDate,
+                    itemName: itemName, // ✅ Updated variable name
+                    totalProducts: totalProducts, // ✅ Updated variable name
+                    date: date, // ✅ Updated variable name
                     userName: self.userName // ✅ Pass userName correctly
                 ))
                 self.present(historyView, animated: true, completion: nil)
             }
         }
-    
     private func updateCapturedImage(_ image: UIImage) {
         self.detectionOverlay.sublayers?.removeAll()
         processImage(image)
