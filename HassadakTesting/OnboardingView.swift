@@ -29,10 +29,10 @@ struct OnboardingView: View {
                 .tabViewStyle(PageTabViewStyle())
                 .ignoresSafeArea()
             }
-            .navigationDestination(isPresented: $isActive) {
-                ContentView()
-                    .navigationBarBackButtonHidden(true)
-            }
+//            .navigationDestination(isPresented: $isActive) {
+//                ContentView()
+//                    .navigationBarBackButtonHidden(true)
+//            }
         }
     }
 }
